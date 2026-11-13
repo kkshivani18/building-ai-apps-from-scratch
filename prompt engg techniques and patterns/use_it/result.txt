@@ -1,0 +1,198 @@
+(ai-course) PS D:\Learning\AI\AI from scratch courses\building and deploying AI applications\prompt engg techniques and patterns\use_it> python .\provider_agnostic_gemini.py
+Use Redis when you need complex data structures, persistence, pub/sub messaging, or master-replica replication.
+Use Memcached when you need a simple, fast, multithreaded key-value cache for string data without persistence.
+(ai-course) PS D:\Learning\AI\AI from scratch courses\building and deploying AI applications\prompt engg techniques and patterns\use_it> cd ..     
+(ai-course) PS D:\Learning\AI\AI from scratch courses\building and deploying AI applications\prompt engg techniques and patterns> python .\run_everything.py
+======================================================================
+  PROMPT PATTERN CATALOG
+======================================================================
+
+  [persona] Persona Pattern
+    Activates a specific expert distribution in the model's training data
+    Variables: role, experience, style, priority, task
+    Recommended temp: 0.7
+
+  [few_shot] Few-Shot Pattern
+    Provides concrete examples to anchor the output format and style
+    Variables: examples, input
+    Recommended temp: 0.0
+
+  [chain_of_thought] Chain-of-Thought Pattern
+    Forces explicit reasoning steps before the final answer
+    Variables: problem
+    Recommended temp: 0.3
+
+  [template_fill] Template Fill Pattern
+    Constrains output to a specific structure with named fields
+    Variables: text, template_structure
+    Recommended temp: 0.0
+
+  [critique] Critique Pattern
+    Self-refinement through explicit critique before final output
+    Variables: task
+    Recommended temp: 0.5
+
+  [guardrail] Guardrail Pattern
+    Constrains the model to a specific domain with explicit boundaries
+    Variables: role, domain, additional_rules, question
+    Recommended temp: 0.3
+
+  [meta_prompt] Meta-Prompt Pattern
+    Uses the LLM to generate optimized prompts for other tasks
+    Variables: objective, metric, model
+    Recommended temp: 0.7
+
+  [decomposition] Decomposition Pattern
+    Breaks complex problems into manageable pieces
+    Variables: problem
+    Recommended temp: 0.3
+
+  [audience_adapt] Audience Adaptation Pattern
+    Adapts explanation complexity to the target audience
+    Variables: concept, audience, length, include, exclude
+    Recommended temp: 0.5
+
+  [boundary] Boundary Pattern
+    Hard boundary on what the model will and will not respond to
+    Variables: scope, refusal_message, user_input
+    Recommended temp: 0.0
+
+======================================================================
+  SINGLE PROMPT BUILD + TEST
+======================================================================
+
+  System message:
+    You are an AI assistant using the Persona Pattern.
+
+  User message:
+    You are a senior DevOps engineer at Netflix with 8 years of infrastructure automation.
+Your communication style is direct and practical.
+You prioritize reliability over speed.
+
+Explain why container o...
+
+  Temperature: 0.7
+
+  Pattern metadata: {
+    "description": "Activates a specific expert distribution in the model's training data",
+    "variables_used": [
+        "role",
+        "experience",
+        "style",
+        "priority",
+        "task"
+    ]
+}
+
+  [gpt-4o]
+    Response: [GPT-4o response for prompt 1b9e3322] This is a simulated response demonstrating the model's output ...
+    Tokens: {'prompt': 150, 'completion': 45, 'total': 195}
+    Latency: 850ms
+
+  [claude-3.5-sonnet]
+    Response: [Claude 3.5 Sonnet response for prompt fc7dc3c5] This is a simulated response. Claude tends to be di...
+    Tokens: {'prompt': 145, 'completion': 40, 'total': 185}
+    Latency: 720ms
+
+  [gemini-1.5-pro]
+    Response: [Gemini 1.5 Pro response for prompt bf522579] This is a simulated response. Gemini tends to be compr...
+    Tokens: {'prompt': 155, 'completion': 42, 'total': 197}
+    Latency: 900ms
+======================================================================
+  PROMPT ENGINEERING TEST SUITE
+======================================================================
+
+============================================================
+  Test: Persona: Technical Writer
+  Pattern: persona
+============================================================
+
+  System: You are an AI assistant using the Persona Pattern....
+  User prompt: You are a senior technical writer at Stripe with 10 years of API documentation experience.
+Your communication style is p...
+  Temperature: 0.7
+
+  Model                        Score   Tokens    Latency
+  -------------------------------------------------------
+  gpt-4o                       0.667      195      850ms
+  claude-3.5-sonnet            0.667      185      720ms
+  gemini-1.5-pro               0.667      197      900ms
+
+============================================================
+  Test: Few-Shot: Sentiment Analysis
+  Pattern: few_shot
+============================================================
+
+  System: You are an AI assistant using the Few-Shot Pattern....
+  User prompt: Here are examples of the expected input/output format:
+
+Input: "The food was amazing but service was slow"
+Output: {"sen...
+  Temperature: 0.0
+
+  Model                        Score   Tokens    Latency
+  -------------------------------------------------------
+  gpt-4o                       0.000      195      850ms
+  claude-3.5-sonnet            0.000      185      720ms
+  gemini-1.5-pro               0.000      197      900ms
+
+============================================================
+  Test: Chain-of-Thought: Math Problem
+  Pattern: chain_of_thought
+============================================================
+
+  System: You are an AI assistant using the Chain-of-Thought Pattern....
+  User prompt: Think through this step by step.
+
+Problem: A store offers 20% off all items. An item originally costs $85. There is also...
+  Temperature: 0.3
+
+  Model                        Score   Tokens    Latency
+  -------------------------------------------------------
+  gpt-4o                       0.500      195      850ms
+  claude-3.5-sonnet            0.500      185      720ms
+  gemini-1.5-pro               0.500      197      900ms
+
+============================================================
+  Test: Template Fill: Resume Extraction
+  Pattern: template_fill
+============================================================
+
+  System: You are an AI assistant using the Template Fill Pattern....
+  User prompt: Extract information from the following text and fill in the template.
+
+Text: John Smith is a software engineer at Google...
+  Temperature: 0.0
+
+  Model                        Score   Tokens    Latency
+  -------------------------------------------------------
+  gpt-4o                       0.000      195      850ms
+  claude-3.5-sonnet            0.000      185      720ms
+  gemini-1.5-pro               0.000      197      900ms
+
+============================================================
+  Test: Guardrail: Scoped Assistant
+  Pattern: guardrail
+============================================================
+
+  System: You are an AI assistant using the Guardrail Pattern....
+  User prompt: You are a Python programming tutor.
+
+Rules:
+- ONLY answer questions about Python programming
+- If the question is outsid...
+  Temperature: 0.3
+
+  Model                        Score   Tokens    Latency
+  -------------------------------------------------------
+  gpt-4o                       0.500      195      850ms
+  claude-3.5-sonnet            0.500      185      720ms
+  gemini-1.5-pro               0.500      197      900ms
+
+
+======================================================================
+  SUMMARY: MODEL RANKINGS ACROSS ALL TESTS
+======================================================================
+  gpt-4o: 5 wins out of 5 tests
+
+In the above response, I'm comparing google gemini and run_everything for Use It, is this section done?
